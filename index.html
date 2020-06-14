@@ -1,0 +1,875 @@
+<html>
+	<head>
+		<style type="text/css">
+			/*INTERFAZ*/
+			*{
+				margin: 0;
+				padding: 0;
+			}
+
+			.boton{
+				background-color: brown;
+				width: 45px;
+				height: 30px;
+				opacity: 0.4;
+				color: white;
+				cursor: pointer;
+				font-size: 18px;
+			}
+
+			/*FIN INTERFAZ*/
+			#pantalla{
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				background: url('images/fondos/fondo.jpg') no-repeat;
+
+			}
+			#controles{
+				position: absolute;
+				width: 100%;
+				height: 10%;
+				top: 90%;
+				left:0%;
+				z-index: 4;
+
+			}
+			/* INICIO STAN*/
+			#cuerpo1{   /* CONTENEDOR DEL PERSONAJE 1*/
+				position: absolute;
+				width: 600px;
+				height: 600px;
+
+			}
+			#cuerpo{
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				background: url('images/4/cuerpo.png') no-repeat;
+				transform-origin: 200px 0px;
+				z-index: 4;
+				animation: latir;
+				background-size: contain;
+			}
+			#ojo{
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				background: url('images/4/ojos.png') no-repeat;
+				animation: pesta;
+				z-index: 2;
+				background-size: contain;
+			}
+			#boca{
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				background: url('images/4/boca1.png') no-repeat;
+				z-index: 3;
+				animation: hablar;
+				background-size: contain;
+			}
+			#cabeza{
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				background: url('images/4/cabeza.png') no-repeat;
+				z-index: 1;
+				animation: latirc;
+				background-size: contain;
+			}
+			/* FIN STAN*/
+			
+
+
+
+			@media (max-width: 768px) {
+				body{
+				/*max-width: 576;*/
+				width: 740px;
+				height: 360px;
+				}
+				#pantalla{
+					position: absolute;
+					width: 100%;
+					height: 100%;
+					background: url('images/fondos/fondom.jpg') no-repeat;
+
+				}
+				#cuerpo1{   
+					width: 300px;
+					height: 300px;
+				}
+				#pantalla{
+					width: 740px;
+					height: 360px;
+
+				}
+				#cuerpotexto, #cuerpotexto2, #zoomcentral, #zoomizq, #zoomder, #restaurar{
+					display: none;
+				}
+			}
+		</style>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/jquery.keyframes.js"></script>
+
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var sw=0; //swich para voltear al mono
+				var swo=0; //switch ojo para saber donde pestañear
+
+				
+				//FUNCIONES STAN
+				$('#derecha').click(function() {
+					var auto = $('#cuerpo1');
+    				auto.animate({ 	left : parseInt(auto.css('left'))+40, 	top : parseInt(auto.css('top'))-5  },100);
+    				auto.animate({ 	left : parseInt(auto.css('left'))+40, 	top : parseInt(auto.css('top'))  },100);
+				});
+				$('#izquierda').click(function() {
+					var auto = $('#cuerpo1');
+    				auto.animate({ 	left : parseInt(auto.css('left'))-40, 	top : parseInt(auto.css('top'))-5  },100);
+    				auto.animate({ 	left : parseInt(auto.css('left'))-40, 	top : parseInt(auto.css('top'))  },100);    		
+    			});
+				$('#abajo').click(function() {
+					var auto = $('#cuerpo1');
+    				auto.animate({ 	top : parseInt(auto.css('top'))+40, 	left : parseInt(auto.css('left'))-5  },100);
+    				auto.animate({ 	top : parseInt(auto.css('top'))+40, 	left : parseInt(auto.css('left'))  },100);
+				});
+				$('#arriba').click(function() {
+					var auto = $('#cuerpo1');
+    				auto.animate({ 	top : parseInt(auto.css('top'))-40, 	left : parseInt(auto.css('left'))-5  },100); 
+    				auto.animate({ 	top : parseInt(auto.css('top'))-40, 	left : parseInt(auto.css('left'))  },100);    			
+				});
+				//FIN FUNCIONES STAN
+
+				$('#restaurar').click(function() {
+					//pos programando el primer zoom
+    				$('#pantalla').css('transform','scale(1)');
+    				//transform-origin:50% 0%;
+					$('#pantalla').css('transform-origin','0% 0%');
+    				//$('body').css('transform','scale(1)');
+					//$('body').css('transform-origin','0% 0%');					
+
+				});	
+				$('#zoomcentral').click(function() {
+					//pos programando el primer zoom
+    				$('#pantalla').css('transform','scale(1.5)');
+					$('#pantalla').css('transform-origin','50% 50%');
+    				//$('body').css('transform','scale(1.5)');
+					//$('body').css('transform-origin','50% 0%');
+
+				});				
+				$('#zoomizq').click(function() {
+					//pos programando el primer zoom
+    				$('#pantalla').css('transform','scale(1.5)');
+					$('#pantalla').css('transform-origin','-50% 50%');
+    				//$('body').css('transform','scale(1.5)');
+					//$('body').css('transform-origin','50% 0%');
+
+				});				
+				$('#zoomder').click(function() {
+					//pos programando el primer zoom
+    				$('#pantalla').css('transform','scale(1.5)');
+					$('#pantalla').css('transform-origin','150% 50%');
+    				//$('body').css('transform','scale(1.5)');
+					//$('body').css('transform-origin','50% 0%');
+
+				});		
+				$('#fondo1').click(function() {
+					//cambiando el fondo
+    				$('#pantalla').css('background','url(fondo1.jpg');
+    				$('#pantalla').css('background-size','100% 100%');
+
+				});	
+				$('#fondo2').click(function() {
+					//cambiando el fondo
+    				$('#pantalla').css('background','url(fondo2.jpg');
+    				$('#pantalla').css('background-size','100% 100%');
+				});	
+				$('#fondo3').click(function() {
+					//cambiando el fondo
+    				$('#pantalla').css('background','url(fondo3.jpg');
+    				$('#pantalla').css('background-size','100% 100%');
+
+				});		
+				//funciones de cambio de cuerpo
+	
+
+
+				$("#cuerpotexto").keydown(function(event){
+					/*$("#cuerpotexto2").text("El código de la tecla " + String.fromCharCode(event.which) + " es: " + event.which);
+					alert(event.which);*/
+					if(event.altKey){
+					switch (event.which){
+	
+						}
+
+					}
+					else{
+						switch (event.which){
+
+							case 37 :						
+								aizquierda();
+								break;
+							case 38 :						
+								aarriba();
+								break;
+							case 39 :						
+								aderecha();
+								cam1();
+								break;													
+							case 40 :						
+								aabajo();
+								break;
+							case 96 :						
+								voltear();
+								break;
+							case 97 :						
+								ahablar1();
+								break;
+							case 98 :						
+								ahablar2();
+								break;													
+							case 99 :						
+								ahablar3();
+								break;	
+							case 100 :
+								ojosi();
+								break;					
+							case 101 :
+								ojosc();
+								break;					
+							case 102 :
+								ojosd();
+								break;	
+								//cuerpo				
+							case 90 :						
+								cuerpo1();
+								break;	
+							case 88 :
+								cuerpo2();
+								break;					
+							case 67 :
+								cuerpo3();
+								break;					
+							case 86 :
+								cuerpo4();
+								break;	
+							case 66 :
+								atacar1();//ATAQUE 1
+								break;	
+							case 78 :
+								reiniciarlatido();//REINICIA LOS LATIDOS
+								break;	
+							case 65:
+								girarb();//REINICIA LOS LATIDOS
+								break;									
+							case 83:
+								cam1();//REINICIA LOS LATIDOS
+								break;									
+						}
+					}
+					$("#cuerpotexto").val("");
+				}); 
+				$("#cuerpotexto2").keydown(function(event){
+					/*$("#cuerpotexto2").text("El código de la tecla " + String.fromCharCode(event.which) + " es: " + event.which);*/
+					alert(event.which);
+
+					$("#cuerpotexto2").val("");
+				}); 
+				//FUNCIONES STAN
+				function aderecha(){
+					var auto = $('#cuerpo1');
+	    				auto.animate({ 	left : parseInt(auto.css('left'))+40, 	top : parseInt(auto.css('top'))-5  },100);
+	    				auto.animate({ 	left : parseInt(auto.css('left'))+40, 	top : parseInt(auto.css('top'))  },100);
+				}
+				function aizquierda(){
+					var auto = $('#cuerpo1');
+	    				auto.animate({ 	left : parseInt(auto.css('left'))-40, 	top : parseInt(auto.css('top'))-5  },100);
+	    				auto.animate({ 	left : parseInt(auto.css('left'))-40, 	top : parseInt(auto.css('top'))  },100);
+				}
+				function aarriba(){
+					var auto = $('#cuerpo1');
+    				auto.animate({ 	top : parseInt(auto.css('top'))-40, 	left : parseInt(auto.css('left'))-5  },100);
+    				auto.animate({ 	top : parseInt(auto.css('top'))-40, 	left : parseInt(auto.css('left'))  },100)
+    				;
+				}
+				function aabajo(){
+					var auto = $('#cuerpo1');
+    				auto.animate({ 	top : parseInt(auto.css('top'))+40, 	left : parseInt(auto.css('left'))-5  },100);
+    				auto.animate({ 	top : parseInt(auto.css('top'))+40, 	left : parseInt(auto.css('left'))  },100);
+				}
+				//funciones de cambio d ecuerpo stan
+				function cuerpo1(){
+					$('#cuerpo1').css('background','url(images/4/cuerpo.png) no-repeat');
+				}
+				function cuerpo2(){
+					$('#cuerpo1').css('background','url(images/4/cuerpo2.png) no-repeat');
+				}
+				function cuerpo3(){
+					$('#cuerpo1').css('background','url(images/4/cuerpo3.png) no-repeat');
+				}
+				function cuerpo4(){
+					$('#cuerpo1').css('background','url(images/4/cuerpo4.png) no-repeat');
+				}
+				//FIN FUNCIONES CAMBIO DE CUERPO
+				function ahablar1(){
+					$('#boca').playKeyframe({
+					  name: 'hablar1',
+					  duration: "0.2s",
+					  timingFunction: 'linear',
+					  iterationCount: '1',
+					  direction: 'normal',
+					  fillMode: 'forwards',
+					});
+				}	
+				function ahablar2(){
+					$('#boca').playKeyframe({
+					  name: 'hablar2',
+					  duration: "0.3s",
+					  timingFunction: 'linear',
+					  iterationCount: '1',
+					  direction: 'normal',
+					  fillMode: 'forwards',
+					});
+				}
+				function ahablar3(){
+					$('#boca').playKeyframe({
+					  name: 'hablar3',
+					  duration: "0.4s",
+					  timingFunction: 'linear',
+					  iterationCount: '1',
+					  direction: 'normal',
+					  fillMode: 'forwards',
+					});
+				}	
+				//funcion atacar
+				function atacar1(){
+					/*
+					$('#cuerpo').pauseKeyframe();
+					$('#cabeza').pauseKeyframe();
+					$('#ojo').pauseKeyframe();*/
+					$('#cuerpo1').playKeyframe({
+					  name: 'atacar1',
+					  duration: "0.5s",
+					  timingFunction: 'linear',
+					  iterationCount: '1',
+					  direction: 'normal',
+					  fillMode: 'forwards',
+					});
+					$('#cabeza').playKeyframe({
+					  name: 'catacar1',
+					  duration: "0.5s",
+					  timingFunction: 'linear',
+					  iterationCount: '1',
+					  direction: 'normal',
+					  fillMode: 'forwards',
+					});
+					$('#ojo').playKeyframe({
+					  name: 'oatacar1',
+					  duration: "0.5s",
+					  timingFunction: 'linear',
+					  iterationCount: '1',
+					  direction: 'normal',
+					  fillMode: 'forwards',
+					});/*
+					$('#cuerpo').pauseKeyframe();
+					$('#cabeza').pauseKeyframe();
+					$('#ojo').pauseKeyframe();
+					*/
+					//reiniciarlatido();
+				}
+				function reiniciarlatido(){
+					
+					$('#cuerpo1').playKeyframe({
+						name: 'latir',
+						duration: "4s",
+						timingFunction: 'steps(1)',
+						iterationCount: 'infinite',
+						direction: 'normal',
+						fillMode: 'forwards',					
+					});
+					$('#cabeza').playKeyframe({
+						name: 'latirc',
+						duration: "2s",
+						timingFunction: 'steps(1)',
+						iterationCount: 'infinite',
+						direction: 'normal',
+						fillMode: 'forwards',
+						
+					});
+
+					$('#ojo').playKeyframe({
+						  name: 'pesta',
+						  duration: "4s",
+						  timingFunction: 'steps(1)',
+						  iterationCount: 'infinite',
+						  direction: 'normal',
+						  fillMode: 'forwards',
+						  
+					});	
+				}
+				function girarb(){
+					$('#cuerpo1').css('transform-origin','90% 90%');
+//					$('#cuerpo').css('transform-origin','left top');
+
+					$('#cuerpo1').css('transform','rotate(-20deg)');
+				}	
+
+				function voltear(){
+					if(sw==0){
+//						$('#cuerpo').css('transform-origin','125px 0px');
+						$('#cuerpo1').css('transform','scaleX(-1)')
+						sw=1;
+					}
+					else{
+						$('#cuerpo1').css('transform','scaleX(1)')
+						sw=0;
+
+					}
+				}
+				function ojosc(){
+						$('#ojo').pauseKeyframe();
+						//url('images/4/ojos.png') no-repeat;
+						$('#ojo').css('background','url("images/4/ojos.png")');
+						//$('#ojo').css('animation','pesta');
+						//$('#ojo').resumeKeyframe();
+						$('#ojo').playKeyframe({
+						  name: 'pesta',
+						  duration: "4s",
+						  timingFunction: 'steps(1)',
+						  iterationCount: 'infinite',
+						  direction: 'normal',
+						  fillMode: 'forwards',
+						  
+						});						
+				}
+				function ojosi(){
+						$('#ojo').pauseKeyframe();
+						$('#ojo').css('background','url("images/4/ojos3.png")');
+						//$('#ojo').css('animation','pestai');
+						//$('#ojo').resumeKeyframe();
+						$('#ojo').playKeyframe({
+						  name: 'pestai',
+						  duration: "4s",
+						  timingFunction: 'steps(1)',
+						  iterationCount: 'infinite',
+						  direction: 'normal',
+						  fillMode: 'forwards',
+						  
+						});
+				}								
+				function ojosd(){
+						$('#ojo').pauseKeyframe();
+						$('#ojo').css('background','url("images/4/ojos2.png")');
+						//$('#ojo').css('animation','pestad');
+						//$('#ojo').resumeKeyframe();
+						$('#ojo').playKeyframe({
+						  name: 'pestad',
+						  duration: "4s",
+						  timingFunction: 'steps(1)',
+						  iterationCount: 'infinite',
+						  direction: 'normal',
+						  fillMode: 'forwards',
+						  
+						});
+
+				}
+				//FIN FUNCIONES STAN														
+																
+				//INICIO STAN-------------------
+				$.keyframe.define([{
+
+				  name: 'pesta',
+					  
+				   '0%': {
+				    'background': 'url(images/4/ojos.png) no-repeat',
+				    'background-size': 'contain'
+				  },
+				  
+				  '50%': {
+				    'background': 'url(images/4/ojos1.png) no-repeat',
+				    'background-size': 'contain'
+				  },
+				  
+				  '53%': {
+				    'background': 'url(images/4/ojos.png) no-repeat',
+				    'background-size': 'contain'
+				  }
+
+				}]);
+				$.keyframe.define([{
+
+				  name: 'pestai',
+					  
+				   '0%': {
+				    'background': 'url(images/4/ojos3.png) no-repeat'
+				  },
+				  
+				  '50%': {
+				    'background': 'url(images/4/ojos1.png) no-repeat'
+				  },
+				  
+				  '53%': {
+				    'background': 'url(images/4/ojos3.png) no-repeat'
+				  }
+
+				}]);
+				$.keyframe.define([{
+
+				  name: 'pestad',
+					  
+				   '0%': {
+				    'background': 'url(images/4/ojos2.png) no-repeat'
+				  },
+				  
+				  '50%': {
+				    'background': 'url(images/4/ojos1.png) no-repeat'
+				  },
+				  
+				  '53%': {
+				    'background': 'url(images/4/ojos2.png) no-repeat'
+				  }
+
+				}]);
+
+				$.keyframe.define([{
+
+				  name: 'latir',
+					  
+				   '0%': {
+				    'margin-top': '0px'
+				  },
+				  
+				  '50%': {
+				    'margin-top': '-5px'
+				  },
+				  
+				  '53%': {
+				    'margin-top': '0px'
+				  }
+
+				}]);
+
+				$.keyframe.define([{
+
+				  name: 'latirc',
+					  
+				   '0%': {
+				    'margin-bottom': '0px'
+				  },
+				  
+				  '50%': {
+				    'margin-bottom': '-5px'
+				  },
+				  
+				  '53%': {
+				    'margin-bottom': '0px'
+				  }
+
+				}]);				
+				$.keyframe.define([{
+
+				  name: 'hablar',
+					  
+				   '0%': {
+				    'background': 'url(images/4/boca1.png) no-repeat ',
+				    'background-size': 'contain'
+				  },
+				  
+				  '25%': {
+				    'background': 'url(images/4/boca2.png) no-repeat ',
+				    'background-size': 'contain'
+				  },
+				  
+				  '50%': {
+				    'background': 'url(images/4/boca3.png) no-repeat ',
+				    'background-size': 'contain'
+				  }
+				  ,
+				  '75%': {
+				    'background': 'url(images/4/boca5.png) no-repeat ',
+				    'background-size': 'contain'
+				  },
+
+				  '100%': {
+				    'background': 'url(images/4/boca1.png) no-repeat ',
+				    'background-size': 'contain'
+				  }
+				   
+
+				   
+				}]);
+				$.keyframe.define([{
+
+				  name: 'hablar1',
+					  
+
+				  
+				  '25%': {
+				    'background': 'url(images/4/boca2.png) no-repeat ',
+				    'background-size': 'contain'
+				  },
+
+				  '75%': {
+				    'background': 'url(images/4/boca3.png) no-repeat ',
+				    'background-size': 'contain'
+				  },
+
+				  '100%': {
+				    'background': 'url(images/4/boca1.png) no-repeat ',
+				    'background-size': 'contain'
+				  }
+				   
+
+				   
+				}]);
+				$.keyframe.define([{
+
+				  name: 'hablar2',
+					  
+				   '0%': {
+				    'background': 'url(images/4/boca2.png) no-repeat ',
+				    'background-size': 'contain'
+				  },
+				  
+				  '25%': {
+				    'background': 'url(images/4/boca4.png) no-repeat ',
+				    'background-size': 'contain'
+				  },
+				  
+				  '50%': {
+				    'background': 'url(images/4/boca3.png) no-repeat ',
+				    'background-size': 'contain'
+				  }
+				  ,
+
+				  '100%': {
+				    'background': 'url(images/4/boca1.png) no-repeat ',
+				    'background-size': 'contain'
+				  }
+				   
+
+				   
+				}]);
+				$.keyframe.define([{
+
+				  name: 'hablar3',
+					  
+				   '0%': {
+				    'background': 'url(images/4/boca2.png) no-repeat ',
+				    'background-size': 'contain'
+				  },
+				  
+				  '25%': {
+				    'background': 'url(images/4/boca3.png) no-repeat ',
+				    'background-size': 'contain'
+				  },
+				  
+				  '50%': {
+				    'background': 'url(images/4/boca4.png) no-repeat ',
+				    'background-size': 'contain'
+				  }
+				  ,
+				  '75%': {
+				    'background': 'url(images/4/boca2.png) no-repeat ',
+				    'background-size': 'contain'
+				  },
+
+				  '100%': {
+				    'background': 'url(images/4/boca1.png) no-repeat ',
+				    'background-size': 'contain'
+				  }
+				   
+
+				   
+				}]);
+
+				$.keyframe.define([{
+					name: 'atacar1',						
+					'0%': {
+					'background': 'url(images/4/cuerpo.png) no-repeat '
+					},
+					'50%': {
+					'background': 'url(images/4/cuerpoa1.png) no-repeat '
+					}
+					,
+					'75%': {
+					'background': 'url(images/4/cuerpoa2.png) no-repeat ',
+					'z-index': '4'
+					}
+					,
+					'100%': {
+					'background': 'url(images/4/cuerpo.png) no-repeat '
+					}					
+				}]);	
+				$.keyframe.define([{
+					name: 'catacar1',						
+					'0%': {
+					'background': 'url(images/4/cabeza.png) no-repeat '
+					},
+					'50%': {
+					'background': 'url(images/4/cabeza.png) no-repeat '
+					}
+					,
+					'75%': {
+					'background': 'url(images/4/cabezaa2.png) no-repeat '
+					}
+					,
+					'100%': {
+					'background': 'url(images/4/cabeza.png) no-repeat '
+					}					
+				}]);
+				$.keyframe.define([{
+					name: 'oatacar1',						
+					'0%': {
+					'background': 'url(images/4/ojos.png) no-repeat '
+					},
+					'50%': {
+					'background': 'url(images/4/ojos.png) no-repeat '
+					}
+					,
+					'75%': {
+					'background': 'url(images/4/ojosa2.png) no-repeat '
+					}
+					,
+					'100%': {
+					'background': 'url(images/4/ojos.png) no-repeat '
+					}					
+				}]);			
+				//$('#cuerpo').css('transform','rotate(-20deg)');
+				$.keyframe.define([{
+					name: 'cam1',						
+					'0%': {
+					'transform': 'rotate(0deg) '
+					},
+					'25%': {
+						'transform': 'rotate(-0.5deg) '
+					},
+					'50%': {
+						'transform': 'rotate(-1deg) '
+					}
+					,
+					'75%': {
+						'transform': 'rotate(-0.5deg) '
+					}
+					,
+					'100%': {
+						'transform': 'rotate(0deg) '
+					}					
+				}]);			
+
+				//FIN STAN-------------------
+				
+
+				//INICIO KEYFRAME STAN
+				$('#ojo').playKeyframe({
+				  name: 'pesta',
+				  duration: "4s",
+				  timingFunction: 'steps(1)',
+				  iterationCount: 'infinite',
+				  direction: 'normal',
+				  fillMode: 'forwards',
+				  
+				});
+
+				$('#cuerpo1').playKeyframe({
+				  name: 'latir',
+				  duration: "4s",
+				  timingFunction: 'steps(1)',
+				  iterationCount: 'infinite',
+				  direction: 'normal',
+				  fillMode: 'forwards',
+				  
+				});
+ 				$('#cabeza').playKeyframe({
+				  name: 'latirc',
+				  duration: "4s",
+				  timingFunction: 'steps(1)',
+				  iterationCount: 'infinite',
+				  direction: 'normal',
+				  fillMode: 'forwards',
+				  
+				});
+				//FIN KEYFRAME STAN
+
+				//$('#cuerpo').playKeyframe('latir 5s linear 0s 3 normal forwards');
+				$('#derecha').click(function() {
+					$('.dos').playKeyframe({
+					  name: 'derecha',
+					  duration: "1s",
+					  timingFunction: 'ease',
+					  iterationCount: '1',
+					  direction: 'normal',
+					  fillMode: 'forwards',
+				  
+					});
+				});
+				$('#sihablar').click(function() {
+					$('#boca').playKeyframe({
+					  name: 'hablar',
+					  duration: "0.4s",
+					  timingFunction: 'linear',
+					  iterationCount: '1',
+					  direction: 'normal',
+					  fillMode: 'forwards',
+					  
+					});
+				});
+				$('#hablar1').click(function() {
+					ahablar1();
+				});
+				$('#hablar2').click(function() {
+					ahablar2();
+				});
+				$('#hablar3').click(function() {
+					ahablar3();
+				});
+				$('#voltear').click(function() {
+					voltear();
+				});
+				/* Reset the animation
+				$(selector).resetKeyframe(callback);
+
+				// Pause the animation
+				$(selector).pauseKeyframe();
+
+				// Resume the animation
+				$(selector).resumeKeyframe();*/
+			});	
+		</script>
+	</head>
+	<body>
+		<div id="pantalla">
+			<div id="cuerpo1"> 
+				<div id="ojo">  </div> 
+				<div id="boca"> </div>
+				<div id="cabeza"> </div>
+				<div id="cuerpo">  </div> 
+			</div>
+
+
+			<div id="controles">
+			
+				<input type="button" name="b1" id="izquierda" value="<" class="boton"> </input>
+				<input type="button" name="b3" id="arriba" value="^" class="boton">  </input>
+				<input type="button" name="b4" id="abajo" value="v" class="boton">  </input>
+				<input type="button" name="b2" id="derecha" value=">" class="boton">  </input>
+				<input type="button" name="b5" id="hablar1" value=":D 1" class="boton">  </input>
+				<input type="button" name="b5" id="hablar2" value=":D 2" class="boton">  </input>
+				<input type="button" name="b5" id="hablar3" value=":D 3" class="boton">  </input>
+				<input type="button" name="b5" id="voltear" value="VOL" class="boton">  </input>
+				<input type="button" name="b6" id="restaurar" value="ZR" class="boton">  </input>
+				<input type="button" name="b7" id="zoomcentral" value="ZC" class="boton">  </input>
+				<input type="button" name="b8" id="zoomizq" value="ZI" class="boton">  </input>
+				<input type="button" name="b9" id="zoomder" value="ZD" class="boton">  </input>
+				<input type="text" name="t1" id="cuerpotexto" size="3">  </input>
+				<input type="text" name="t2" id="cuerpotexto2" size="3">  </input>
+				<input type="button" name="b10" id="fondo1" value="F1" class="boton">  </input>
+				<input type="button" name="b11" id="fondo2" value="F2" class="boton">  </input>
+				<input type="button" name="b12" id="fondo3" value="F3" class="boton">  </input>
+			</div>
+		</div>
+	</body>
+
+</html>
